@@ -1,0 +1,7 @@
+// "python.envFile": "${workspaceFolder}/.env"
+
+{
+    "files.associations": {
+        "iostream": "cpp"
+    }
+}
