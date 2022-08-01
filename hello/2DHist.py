@@ -25,16 +25,17 @@ with open ("vac10.hepmc") as file:
             line = file.readline().strip().split()
             particlesid = [px,py,e]
             particles.append(particlesid)                                   #fill in empty list
-            if len(line) == 0:
+            if line[0] == "E" :
+            #if len(line) == 0:
                 break                                   # Break loop when line is empty
-# print(particles)                                      # Prints Particles list of tuples
+print(particles)                                      # Prints Particles list of tuples
 # print(particlecount)
 # print(eventcount)
-x_value = [x[0] for x in particles]
-y_value = [x[1] for x in particles]
-#plt.style.use('dark_background')
-sns.histplot(data = particles, x = x_value, y = y_value, cbar=True, log_scale=(True,True), cmap='magma')
-plt.xlabel('px')
-plt.ylabel('py')
+# x_value = [x[0] for x in particles]
+# y_value = [x[1] for x in particles]
+# #plt.style.use('dark_background')
+# sns.histplot(data = particles, x = x_value, y = y_value, cbar=True, log_scale=(True,True), cmap='magma')
+# plt.xlabel('px')
+# plt.ylabel('py')
 
-plt.show()
+# plt.show()

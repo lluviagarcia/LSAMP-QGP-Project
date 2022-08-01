@@ -18,15 +18,19 @@ def main():
     #filename = '../data/single-event.dat'
     filename = 'vac10.hepmc'
     f = open(filename,'r')
-    #filename = '/Users/gsalam/work/fastjet/data/Pythia-PtMin50-LHC-10kev.dat.gz'
-    #f = gzip.GzipFile(filename,'rb')
-    
+        
     # get the event
     iev = 0
-    while True:
-        event = read_event(f)
+    line = f.readline().strip().split()
+    line = f.readline().strip().split()
+    line = f.readline().strip().split()
+    line = f.readline().strip().split()
+    while line[0] == "E":
+        event = read_event(f)           #loop over events, call particle function
         iev += 1
-        if (len(event) == 0): break
+        if (len(event) == 0): break                 #fix infinite loop here?yes
+        #if iev== 11 :                                 #chage back to 11
+            #break
         jets = selector(jet_def(event))
         print("Event {0} has {1} particles".format(iev, len(event)))
         
@@ -40,36 +44,21 @@ def main():
             
 #----------------------------------------------------------------------
 def read_event(file_or_filename):
-    """
-Routine that can take either an existing opened file object, or a
-filename (which it will open itself) and then reads an event from that
-file. An event is deemed to end when the file comes to an end or when
-the reader encounters the string "#END".
-
-The event is converted to a python list of PseudoJets
-    """
-eventcount = 0
-particlecount = 0
-event = []
-with open ("vac10.hepmc") as file:
-    line = file.readline().strip().split()              # skip junk lines 
-    line = file.readline().strip().split()
-    line = file.readline().strip().split()
-    line = file.readline().strip().split()
-    while line[0] == "E" :                              # Start event count at E
-        eventcount += 1
-        line = file.readline().strip().split()
-        for i in range(8) :                             # skip junk lines
-            line = file.readline().strip().split()
-            i = +1
-        while line[0] == "P" :                          # start particle count at P
-            particlecount +=1
-            px,py,e = float(line[3]),float(line[4]),float(line[6])          #create tuple and turn elements into float values
-            line = file.readline().strip().split()
-            particlesid = [px,py,e]
-            event.append(particlesid)                                #fill in empty list AND append pseudojets
-            if len(line) == 0:
-                break                                   # Break loop when line is empty
+    if (isinstance(file_or_filename,str)) : f = open(file_or_filename, 'r')
+    else                                  : f = file_or_filename
     
+    event = []
+    for i in range(8) :                             # skip junk lines
+        line = f.readline().strip().split()
+        i = +1
+        #print(line)
+        while line[0] == "P" :                          # start particle count at P
+            px,py,pz,e = float(line[3]),float(line[4]),float(line[5]),float(line[6])          #create tuple and turn elements into float values
+            event.append(fj.PseudoJet(px,py,pz,e));                                #fill in empty list AND append pseudojets
+            line = f.readline().strip().split()
+            if len(line) == 0:
+                break                                   # Break loop when P ends
+            
+    return event                                        #where this is at matters
 if __name__ == '__main__':
     main()

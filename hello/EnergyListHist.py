@@ -6,7 +6,6 @@ import numpy as np
 eventcount = 0
 particlecount = 0
 energylist = []
-
 with open ("vac10.hepmc") as file:
     line = file.readline().strip().split()              # skip junk lines 
     line = file.readline().strip().split()

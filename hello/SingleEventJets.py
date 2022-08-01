@@ -51,11 +51,11 @@ def read_event(filename):
         print(line)
         while line[0] == "P" :                       # start particle count at P
             px,py,pz,e = float(line[3]),float(line[4]),float(line[5]),float(line[6])           #create tuple and turn elements into float values
-            
-            event.append(fj.PseudoJet(px,py,pz,e));                                #fill in empty list
+            event.append(fj.PseudoJet(px,py,pz,e));                                              #fill in empty list
             line = file.readline().strip().split()
             if len(line) == 0:
                 break                                   # Break loop when line is empty
         return event
+
 if __name__ == '__main__':
     main()
