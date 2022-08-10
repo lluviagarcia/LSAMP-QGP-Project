@@ -8,40 +8,55 @@ import numpy as np
 
 #import gzip
 def main():
-
+    global f
+    global jet_def
+    global selector
     # get the banner out of the way early on
     fj.ClusterSequence.print_banner()
     # print()
+    
     # set up our jet definition and a jet selector
     jet_def = fj.JetDefinition(fj.antikt_algorithm, 0.4)
     selector = fj.SelectorPtMin(5.0) & fj.SelectorAbsRapMax(4.5)
     print("jet definition is:",jet_def)
     print("jet selector is:", selector,"\n")
+    
     #filename = '../data/single-event.dat'
     filename = 'vac10.hepmc' 
     filename2 = 'vac1.hepmc' 
 
     f = open(filename,'r')
+    allJetsFlat = read_file(f)
+    p1 = plot_data(allJetsFlat)
+    f.close()
+
+    #read and plot second file
     f2 = open(filename2, 'r')
-        
-    # get the event
+    allJetsFlat = read_file(f2)
+    p2 = plot_data(allJetsFlat)
+
+#---------------------------------------------------------------------
+def read_file(file_or_filename):
+    global line
+    if (isinstance(file_or_filename,str)) : f = open(file_or_filename, 'r')
+    else                                  : f = file_or_filename
+
     iev = 0
     alljets = []
-
-    global line
-
+   
     line = f.readline().strip().split()
     line = f.readline().strip().split()
     line = f.readline().strip().split()
     line = f.readline().strip().split()
     
+
     while line[0] == "E":
         event = read_event(f)           #loop over events, and call particle function
         iev += 1
         if ((len(line)) == 0): break                 
         jets = selector(jet_def(event))
-        #print("Event {0} has {1} particles".format(iev, len(event)))
-           
+        print("Event {0} has {1} particles".format(iev, len(event)))
+            
         alljets.append(jets)
 
         # for ijet in range(len(jets)):
@@ -60,23 +75,7 @@ def main():
     for iallJetsFlat in range(len(allJetsFlat)):
         #print("jet {0} pt and mass: {1} {2}".format(iallJetsFlat, allJetsFlat[iallJetsFlat].pt(), allJetsFlat[iallJetsFlat].m()))
         mass.append(allJetsFlat[iallJetsFlat].m())
-    #plot_data(allJetsFlat)
-
-    #loop over second file
-    line = f2.readline().strip().split()
-    line = f2.readline().strip().split()
-    line = f2.readline().strip().split()
-    line = f2.readline().strip().split()
-    while line[0] == "E":
-        event = read_event(f2)           #loop over events, and call particle function
-        iev += 1
-        if ((len(line)) == 0): break                 
-        jets = selector(jet_def(event))
-        print("Event {0} has {1} particles".format(iev, len(event)))
-           
-        alljets.append(jets)
-        print('helllo')
-
+    return allJetsFlat
 #----------------------------------------------------------------------
 def read_event(file_or_filename):
     global line
