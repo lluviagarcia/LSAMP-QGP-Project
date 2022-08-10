@@ -39,6 +39,7 @@ def main():
     allJetsFlat = read_file(f2)
     p2 = plot_data(allJetsFlat)
     sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30], color = 'steelblue') #change bin boundaries according to data size and add logscale for larger
+    plt.legend(labels = ['medium', 'w/o medium'])
 
     plt.show()
 
@@ -114,9 +115,8 @@ def plot_data(allJetsFlat):
     #sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30]) #change bin boundaries according to data size and add logscale for larger
     plt.xlabel('Jet Mass [GEV]', **axis_font)
     plt.ylabel(r'$\frac{1}{N_jets}\frac{dN}{dM_J}$', **axis_font);
-    plt.text(24,0.6, 'anti-kt  R=0.4')
-    plt.text(24,0.5, ' $p^{jet}\geq5$ GEV ')
-    #plt.legend()
+    plt.text(24,0.5, 'anti-kt  R=0.4')
+    plt.text(24,0.45, ' $p^{jet}\geq5$ GEV ')
 
 
 if __name__ == '__main__':
