@@ -23,14 +23,14 @@ def main():
     print("jet selector is:", selector,"\n")
     
     #filename = '../data/single-event.dat'
-    filename = 'vac10.hepmc' 
-    filename2 = 'vac1.hepmc' 
+    filename = 'vac10000.hepmc' 
+    filename2 = 'hydro-2D10000.hepmc'
 
-    #read and plot first file
+    #read and plot first file 
     f = open(filename,'r')
     allJetsFlat = read_file(f)
     p1 = plot_data(allJetsFlat)
-    sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30], color = 'cyan') #change bin boundaries according to data size and add logscale for larger
+    sns.histplot(data = allJetsFlat, x = x, stat = 'probability', color = 'blueviolet', log_scale=True) #change bin boundaries according to data size and add logscale for larger
 
     f.close()
 
@@ -38,8 +38,8 @@ def main():
     f2 = open(filename2, 'r')
     allJetsFlat = read_file(f2)
     p2 = plot_data(allJetsFlat)
-    sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30], color = 'steelblue') #change bin boundaries according to data size and add logscale for larger
-    plt.legend(labels = ['medium', 'w/o medium'])
+    sns.histplot(data = allJetsFlat, x = x, stat = 'probability', color = 'blue', log_scale=True) #change bin boundaries according to data size and add logscale for larger
+    plt.legend(labels = ['w/o medium', 'medium'])
 
     plt.show()
 
@@ -115,8 +115,8 @@ def plot_data(allJetsFlat):
     #sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30]) #change bin boundaries according to data size and add logscale for larger
     plt.xlabel('Jet Mass [GEV]', **axis_font)
     plt.ylabel(r'$\frac{1}{N_jets}\frac{dN}{dM_J}$', **axis_font);
-    plt.text(24,0.5, 'anti-kt  R=0.4')
-    plt.text(24,0.45, ' $p^{jet}\geq5$ GEV ')
+    plt.text(12000,0.025, 'anti-kt  R=0.4')
+    plt.text(12000,0.023, ' $p^{jet}\geq5$ GEV ')
 
 
 if __name__ == '__main__':
