@@ -11,6 +11,7 @@ def main():
     global f
     global jet_def
     global selector
+    global x
     # get the banner out of the way early on
     fj.ClusterSequence.print_banner()
     # print()
@@ -25,15 +26,21 @@ def main():
     filename = 'vac10.hepmc' 
     filename2 = 'vac1.hepmc' 
 
+    #read and plot first file
     f = open(filename,'r')
     allJetsFlat = read_file(f)
     p1 = plot_data(allJetsFlat)
+    sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30], color = 'cyan') #change bin boundaries according to data size and add logscale for larger
+
     f.close()
 
     #read and plot second file
     f2 = open(filename2, 'r')
     allJetsFlat = read_file(f2)
     p2 = plot_data(allJetsFlat)
+    sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30], color = 'steelblue') #change bin boundaries according to data size and add logscale for larger
+
+    plt.show()
 
 #---------------------------------------------------------------------
 def read_file(file_or_filename):
@@ -101,16 +108,15 @@ def read_event(file_or_filename):
 
 #----------------------------------------------------------------------------
 def plot_data(allJetsFlat):
+    global x
     axis_font = {'fontname':'Times New Roman', 'size':'13'}
     x = mass
-    #y = x/(len(allJetsFlat))   #Could use a for loop instead?
-    sns.histplot(data = allJetsFlat, x = x, legend = True, color = 'blueviolet', stat = 'probability', log_scale = True)
+    #sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30]) #change bin boundaries according to data size and add logscale for larger
     plt.xlabel('Jet Mass [GEV]', **axis_font)
     plt.ylabel(r'$\frac{1}{N_jets}\frac{dN}{dM_J}$', **axis_font);
-    plt.text(16,15, 'anti-kt  R=0.4')
-    plt.text(16,13, ' $p^{jet}\geq5$ GEV ')
-
-    plt.show()
+    plt.text(24,0.6, 'anti-kt  R=0.4')
+    plt.text(24,0.5, ' $p^{jet}\geq5$ GEV ')
+    #plt.legend()
 
 
 if __name__ == '__main__':
