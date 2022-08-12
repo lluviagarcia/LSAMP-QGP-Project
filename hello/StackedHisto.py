@@ -18,28 +18,26 @@ def main():
     
     # set up our jet definition and a jet selector
     jet_def = fj.JetDefinition(fj.antikt_algorithm, 0.4)
-    selector = fj.SelectorPtMin(5.0) & fj.SelectorAbsRapMax(4.5)
+    selector = fj.SelectorPtRange(60.0,120.0) & fj.SelectorAbsRapMax(4.5)
     print("jet definition is:",jet_def)
     print("jet selector is:", selector,"\n")
     
     #filename = '../data/single-event.dat'
-    filename = 'vac10000.hepmc' 
-    filename2 = 'hydro-2D10000.hepmc'
+    filename = 'Lluvia_vac30k.hepmc'    #'vac10000.hepmc' 
+    filename2 = 'Lluvia_hydro30k.hepmc'   #'hydro-2D10000.hepmc'
+
 
     #read and plot first file 
     f = open(filename,'r')
-    allJetsFlat = read_file(f)
-    p1 = plot_data(allJetsFlat)
-    sns.histplot(data = allJetsFlat, x = x, stat = 'probability', color = 'blueviolet', log_scale=True) #change bin boundaries according to data size and add logscale for larger
+    mass1 = read_file(f)
+    p1 = plot_data(mass1,'blueviolet')
 
     f.close()
 
     #read and plot second file
     f2 = open(filename2, 'r')
-    allJetsFlat = read_file(f2)
-    p2 = plot_data(allJetsFlat)
-    sns.histplot(data = allJetsFlat, x = x, stat = 'probability', color = 'blue', log_scale=True) #change bin boundaries according to data size and add logscale for larger
-    plt.legend(labels = ['w/o medium', 'medium'])
+    mass2 = read_file(f2)
+    p2 = plot_data(mass2,'blue')
 
     plt.show()
 
@@ -63,17 +61,17 @@ def read_file(file_or_filename):
         iev += 1
         if ((len(line)) == 0): break                 
         jets = selector(jet_def(event))
-        print("Event {0} has {1} particles".format(iev, len(event)))
-            
+        # print("Event {0} has {1} particles".format(iev, len(event)))
         alljets.append(jets)
 
         # for ijet in range(len(jets)):
         #     print("jet {0} pt and mass: {1} {2}".format(ijet, jets[ijet].pt(), jets[ijet].m()))
 
         # make sure jet-related information is correctly held
-        if (len(jets) > 0):
-            print("Number of constituents of jets[0] is {0}".format(len(jets[0].constituents())))
+        # if (len(jets) > 0):
+        #     print("Number of constituents of jets[0] is {0}".format(len(jets[0].constituents())))
 
+    print("In this file, there are ", len(alljets)," jets and", iev, "events")
     #Flatten list of tuples aka open ziplock bags
     global allJetsFlat
     allJetsFlat = list(sum(alljets,()))
@@ -83,7 +81,7 @@ def read_file(file_or_filename):
     for iallJetsFlat in range(len(allJetsFlat)):
         #print("jet {0} pt and mass: {1} {2}".format(iallJetsFlat, allJetsFlat[iallJetsFlat].pt(), allJetsFlat[iallJetsFlat].m()))
         mass.append(allJetsFlat[iallJetsFlat].m())
-    return allJetsFlat
+    return mass
 #----------------------------------------------------------------------
 def read_event(file_or_filename):
     global line
@@ -108,15 +106,22 @@ def read_event(file_or_filename):
     return event                                        #where this is at matters
 
 #----------------------------------------------------------------------------
-def plot_data(allJetsFlat):
+def plot_data(mass,color):
     global x
+    # Plot settings
+    myBinWidth=2
+    myBinRange=(0,40)
+
     axis_font = {'fontname':'Times New Roman', 'size':'13'}
     x = mass
-    #sns.histplot(data = allJetsFlat, x = x, stat = 'probability', bins = [0,5,10,15,20,25,30]) #change bin boundaries according to data size and add logscale for larger
+    plt.rc('font',family='Times New Roman')
+    sns.histplot(data = mass, x = x, color=color,binwidth= myBinWidth,binrange=myBinRange,stat='density') #change bin boundaries according to data size and add logscale for larger
     plt.xlabel('Jet Mass [GEV]', **axis_font)
     plt.ylabel(r'$\frac{1}{N_jets}\frac{dN}{dM_J}$', **axis_font);
-    plt.text(12000,0.025, 'anti-kt  R=0.4')
-    plt.text(12000,0.023, ' $p^{jet}\geq5$ GEV ')
+    # plt.text(12000,0.025, 'anti-kt  R=0.4')
+    # plt.text(12000,0.023, ' $p^{jet}\geq5$ GEV ')
+    plt.legend(labels = ['w/o medium', 'medium'])
+
 
 
 if __name__ == '__main__':
